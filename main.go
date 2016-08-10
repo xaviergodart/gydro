@@ -5,6 +5,10 @@ import (
 	"log"
 )
 
+var (
+	db bolt.DB
+)
+
 func main() {
 	// Open main configuration datastore
 	log.Print("Loading Gydro conguration...")
@@ -14,6 +18,9 @@ func main() {
 	}
 	defer db.Close()
 
-	//
-}
+	// create fake consumer
+	generateFakeConsumers()
 
+	// Iterate over all consumers
+
+}
