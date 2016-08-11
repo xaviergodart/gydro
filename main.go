@@ -9,4 +9,6 @@ func main() {
 	// Open main configuration datastore
 	log.Print("Initialize database connection...")
 	models.InitDB("data.db")
+
+
 }
