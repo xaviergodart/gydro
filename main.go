@@ -10,5 +10,12 @@ func main() {
 	log.Print("Initialize database connection...")
 	models.InitDB("data.db")
 
+	// Set example consumer
+	consumer := &models.Consumer{
+		Id: 8768768,
+		Name: "Xavier",
+		Key: "testkey",
+	}
 
+	consumer.Save()
 }
