@@ -8,11 +8,12 @@ import (
 var db *buntdb.DB
 
 func InitDB(datafile string) {
-	db, err := buntdb.Open(datafile)
-    if err != nil {
-        log.Fatal(err)
-    }
-    db.SetConfig(buntdb.Config{
+	var err error
+	db, err = buntdb.Open(datafile)
+	if err != nil {
+		log.Fatal(err)
+	}
+	db.SetConfig(buntdb.Config{
 		SyncPolicy:           buntdb.Always,
 		AutoShrinkPercentage: 100,
 		AutoShrinkMinSize:    32 * 1024 * 1024,
@@ -36,8 +37,8 @@ func Set(key, value string) error {
 
 func Get(key string) error {
 	err := db.View(func(tx *buntdb.Tx) error {
-	    _, err := tx.Get(key)
-	    return err
+		_, err := tx.Get(key)
+		return err
 	})
 	if err != nil {
 		log.Print(err)

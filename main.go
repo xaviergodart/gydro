@@ -9,6 +9,7 @@ func main() {
 	// Open main configuration datastore
 	log.Print("Initialize database connection...")
 	models.InitDB("data.db")
+	defer models.CloseDB()
 
 	// Set example consumer
 	consumer := &models.Consumer{
