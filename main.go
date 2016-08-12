@@ -13,10 +13,12 @@ func main() {
 
 	// Set example consumer
 	consumer := &models.Consumer{
-		Id: 8768768,
 		Name: "Xavier",
-		Key: "testkey",
+		ApiKey: "testkey",
 	}
 
-	consumer.Save()
+	err := consumer.Save()
+	if err != nil {
+		log.Fatal(err)
+	}
 }

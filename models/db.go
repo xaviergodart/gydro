@@ -3,6 +3,7 @@ package models
 import (
 	"log"
 	"github.com/tidwall/buntdb"
+	"github.com/nu7hatch/gouuid"
 )
 
 var db *buntdb.DB
@@ -35,13 +36,24 @@ func Set(key, value string) error {
 	return err
 }
 
-func Get(key string) error {
+func Get(key string) string {
+	var val string
 	err := db.View(func(tx *buntdb.Tx) error {
-		_, err := tx.Get(key)
-		return err
+		value, err := tx.Get(key)
+		if err != nil{
+	        return err
+	    }
+	    val = value
+	    return nil
 	})
 	if err != nil {
 		log.Print(err)
+		return ""
 	}
-	return err
+	return val
+}
+
+func newUuid() string {
+	nUuid, _ := uuid.NewV4()
+	return nUuid.String()
 }
