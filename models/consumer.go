@@ -20,7 +20,7 @@ func (c *Consumer) Save() error {
         for {
             uuid := newUuid()
             key = strings.Join([]string{"consumer:", uuid}, "")
-            existingConsumer := Get(key)
+            existingConsumer, _ := Get(key)
             if existingConsumer == "" {
                 break
             }

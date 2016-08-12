@@ -26,17 +26,13 @@ func CloseDB() {
 }
 
 func Set(key, value string) error {
-	err := db.Update(func(tx *buntdb.Tx) error {
+	return db.Update(func(tx *buntdb.Tx) error {
 		_, _, err := tx.Set(key, value, nil)
 		return err
 	})
-	if err != nil {
-		log.Panic(err)
-	}
-	return err
 }
 
-func Get(key string) string {
+func Get(key string) (string, error) {
 	var val string
 	err := db.View(func(tx *buntdb.Tx) error {
 		value, err := tx.Get(key)
@@ -47,10 +43,10 @@ func Get(key string) string {
 	    return nil
 	})
 	if err != nil {
-		log.Print(err)
-		return ""
+		return "", err
 	}
-	return val
+
+	return val, nil
 }
 
 func newUuid() string {
