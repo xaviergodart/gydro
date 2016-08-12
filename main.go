@@ -13,6 +13,7 @@ func main() {
 
 	// Set example consumer
 	consumer := &models.Consumer{
+		Uuid: "de0b72d7-79bf-4480-6fbb-cfe2130e423d",
 		Name: "Xavier",
 		ApiKey: "testkey",
 	}

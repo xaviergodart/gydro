@@ -6,6 +6,7 @@ import (
 )
 
 type Consumer struct {
+    Uuid   string
 	Name   string
 	ApiKey string
 }
@@ -13,12 +14,17 @@ type Consumer struct {
 func (c *Consumer) Save() error {
 	cJson, _ := json.Marshal(c)
     var key string
-    for {
-        uuid := newUuid()
-        key = strings.Join([]string{"consumer:", uuid}, "")
-        existingConsumer := Get(key)
-        if existingConsumer == "" {
-            break
+    if c.Uuid != "" {
+        key = strings.Join([]string{"consumer:", c.Uuid}, "")
+    } else {
+        for {
+            uuid := newUuid()
+            key = strings.Join([]string{"consumer:", uuid}, "")
+            existingConsumer := Get(key)
+            if existingConsumer == "" {
+                break
+            }
+            c.Uuid = uuid
         }
     }
 
