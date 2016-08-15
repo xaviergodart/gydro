@@ -1,30 +1,37 @@
 package models
 
 import (
+	"log"
 	"github.com/fatih/structs"
 )
 
 type Consumer struct {
-    Uuid     string
+	id       int
+    CustomId string
 	Username string
 	Keys     []string
 }
 
 // Create new consumer
-// In order to generate an uuid, just pass an empty string
-func NewConsumer(uuid, username string) *Consumer {
-	if uuid == "" {
-		uuid = newUuid()
-	}
+func NewConsumer(customId, username string) *Consumer {
 	return &Consumer{
-		Uuid:     uuid,
+		id:       0,
+		CustomId: customId,
 		Username: username,
 		Keys:     nil,
 	}
 }
 
 // Save consumer in database
-func (c *Consumer) Save() (int, error) {
+// Insert a new document if the id == 0
+func (c *Consumer) Save() error {
 	consumers := store.Use("Consumers")
-	return consumers.Insert(structs.Map(c))
+	if c.id == 0 {
+		docID, err := consumers.Insert(structs.Map(c))
+		c.id = docID
+		return err
+	} else {
+		err := consumers.Update(c.id, structs.Map(c))
+		return err
+	}
 }
