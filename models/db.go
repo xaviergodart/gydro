@@ -2,51 +2,41 @@ package models
 
 import (
 	"log"
-	"github.com/tidwall/buntdb"
+	"github.com/HouzuoGuo/tiedot/db"
 	"github.com/nu7hatch/gouuid"
 )
 
-var db *buntdb.DB
+var store *db.DB
 
-func InitDB(datafile string) {
+func InitDB(DBDir string) {
 	var err error
-	db, err = buntdb.Open(datafile)
+	store, err = db.OpenDB(DBDir)
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
-	db.SetConfig(buntdb.Config{
-		SyncPolicy:           buntdb.Always,
-		AutoShrinkPercentage: 100,
-		AutoShrinkMinSize:    32 * 1024 * 1024,
-	})
+
+	if colExists("Consumers") {
+		return
+	}
+
+	if err = store.Create("Consumers"); err != nil {
+		log.Panic(err)
+	}
+}
+
+func colExists(name string) (bool) {
+	for _, v := range store.AllCols() {
+		if v == name {
+			return true
+		}
+	}
+	return false
 }
 
 func CloseDB() {
-	db.Close()
-}
-
-func Set(key, value string) error {
-	return db.Update(func(tx *buntdb.Tx) error {
-		_, _, err := tx.Set(key, value, nil)
-		return err
-	})
-}
-
-func Get(key string) (string, error) {
-	var val string
-	err := db.View(func(tx *buntdb.Tx) error {
-		value, err := tx.Get(key)
-		if err != nil{
-	        return err
-	    }
-	    val = value
-	    return nil
-	})
-	if err != nil {
-		return "", err
+	if err := store.Close(); err != nil {
+		log.Panic(err)
 	}
-
-	return val, nil
 }
 
 func newUuid() string {
