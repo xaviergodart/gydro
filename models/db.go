@@ -22,6 +22,11 @@ func InitDB(DBDir string) {
 	if err = store.Create("Consumers"); err != nil {
 		log.Panic(err)
 	}
+
+	consumers := store.Use("Cosumers")
+	if err = consumers.Index([]string{"Keys"}); err != nil {
+		log.Panic(err)
+	}
 }
 
 func colExists(name string) (bool) {

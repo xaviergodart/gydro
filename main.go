@@ -13,9 +13,14 @@ func main() {
 
 	// Set example consumer
 	consumer := models.NewConsumer("", "xavier")
+	consumer.Keys = []string{"testkey"}
 
-	err := consumer.Save()
+	_, err := consumer.Save()
 	if err != nil {
 		log.Panic(err)
 	}
+
+	log.Println(consumer)
+
+	models.FindConsumerByKey("testkey")
 }
