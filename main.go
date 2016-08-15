@@ -14,10 +14,10 @@ func main() {
 	// Set example consumer
 	consumer := models.NewConsumer("", "xavier")
 
-	log.Println(consumer)
+	docID, err := consumer.Save()
+	if err != nil {
+		log.Panic(err)
+	}
 
-	//err := consumer.Save()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
+	log.Println(docID)
 }
