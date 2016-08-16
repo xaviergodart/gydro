@@ -6,7 +6,7 @@ import (
 
 type Consumer struct {
 	id       int
-    CustomId string
+	CustomId string
 	Username string
 	ApiKey   string
 }
@@ -33,7 +33,7 @@ func NewConsumer(username, customId, apiKey string) *Consumer {
 
 // Convert an map[string]interface{} (from tiedot) to a Consumer struct
 func GetConsumerFromInterface(id int, c map[string]interface{}) *Consumer {
-	return &Consumer {
+	return &Consumer{
 		id:       id,
 		CustomId: c["CustomId"].(string),
 		Username: c["Username"].(string),

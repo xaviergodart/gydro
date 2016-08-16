@@ -1,8 +1,8 @@
 package main
 
 import (
-	"log"
 	"github.com/xaviergodart/gydro/models"
+	"log"
 )
 
 func main() {

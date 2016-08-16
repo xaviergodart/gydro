@@ -1,14 +1,14 @@
 package models
 
 import (
-	"log"
 	"github.com/HouzuoGuo/tiedot/db"
 	"github.com/nu7hatch/gouuid"
+	"log"
 )
 
 var (
 	store       *db.DB
-	collections = map[string][]string {"Consumers": {"CustomId", "Username", "ApiKey"}, "Routes"   : {"Pattern"}} // collection and indexes
+	collections = map[string][]string{"Consumers": {"CustomId", "Username", "ApiKey"}, "Routes": {"Pattern"}} // collection and indexes
 )
 
 func InitDB(DBDir string) {
@@ -74,9 +74,9 @@ func FindByID(col string, id int) map[string]interface{} {
 func FindBy(col string, field []interface{}, val interface{}, limit int) map[int]map[string]interface{} {
 	collection := store.Use(col)
 	query := map[string]interface{}{
-	   "eq":    val,
-	   "in":    field,
-	   "limit": limit,
+		"eq":    val,
+		"in":    field,
+		"limit": limit,
 	}
 
 	queryResult := make(map[int]struct{})
