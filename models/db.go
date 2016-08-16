@@ -6,7 +6,10 @@ import (
 	"github.com/nu7hatch/gouuid"
 )
 
-var store *db.DB
+var (
+	store       *db.DB
+	collections = map[string][]string {"Consumers": {"CustomId", "Username", "ApiKey"}, "Routes"   : {"Pattern"}} // collection and indexes
+)
 
 func InitDB(DBDir string) {
 	var err error
@@ -15,27 +18,35 @@ func InitDB(DBDir string) {
 		log.Panic(err)
 	}
 
-	if colExists("Consumers") {
-		return
-	}
+	for col, indexes := range collections {
+		if !colExists(col) {
+			if err = store.Create(col); err != nil {
+				log.Panic(err)
+			}
+		}
 
-	if err = store.Create("Consumers"); err != nil {
-		log.Panic(err)
-	}
-
-	consumers := store.Use("Consumers")
-	if err = consumers.Index([]string{"CustomId"}); err != nil {
-		log.Panic(err)
-	}
-	if err = consumers.Index([]string{"Username"}); err != nil {
-		log.Panic(err)
-	}
-	if err = consumers.Index([]string{"ApiKey"}); err != nil {
-		log.Panic(err)
+		collection := store.Use(col)
+		for _, index := range indexes {
+			if indexExists(collection, index) {
+				continue
+			}
+			if err = collection.Index([]string{index}); err != nil {
+				log.Panic(err)
+			}
+		}
 	}
 }
 
-func colExists(name string) (bool) {
+func indexExists(col *db.Col, index string) bool {
+	for _, v := range col.AllIndexes() {
+		if v[0] == index {
+			return true
+		}
+	}
+	return false
+}
+
+func colExists(name string) bool {
 	for _, v := range store.AllCols() {
 		if v == name {
 			return true
