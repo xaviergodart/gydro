@@ -1,17 +1,13 @@
 package models
 
 import (
-	"fmt"
-	"encoding/json"
 	"github.com/fatih/structs"
-	"github.com/HouzuoGuo/tiedot/db"
 )
 
 type Consumer struct {
 	id       int
     CustomId string
 	Username string
-	Keys     []string
 }
 
 // Create new consumer
@@ -20,30 +16,22 @@ func NewConsumer(customId, username string) *Consumer {
 		id:       0,
 		CustomId: customId,
 		Username: username,
-		Keys:     nil,
 	}
 }
 
-func FindConsumerByKey(key string) {
-	consumers := store.Use("Consumers")
-	var query interface{}
-	json.Unmarshal([]byte(`[{"eq": "testkeys", "in": ["Keys"]}]`), &query)
-
-	queryResult := make(map[int]struct{}) // query result (document IDs) goes into map keys
-
-	if err := db.EvalQuery(query, consumers, &queryResult); err != nil {
-		panic(err)
+// Convert an map[string]interface{} (from tiedot) to a Consumer struct
+func GetConsumerFromInterface(id int, c map[string]interface{}) *Consumer {
+	return &Consumer {
+		id:       id,
+		CustomId: c["CustomId"].(string),
+		Username: c["Username"].(string),
 	}
+}
 
-	// Query result are document IDs
-	for id := range queryResult {
-		// To get query result document, simply read it
-		readBack, err := consumers.Read(id)
-		if err != nil {
-			panic(err)
-		}
-		fmt.Printf("Query returned document %v\n", readBack)
-	}
+// Find consumer by api key
+func FindConsumerByID(id int) *Consumer {
+	c := FindByID("Consumers", id)
+	return GetConsumerFromInterface(id, c)
 }
 
 // Save consumer in database

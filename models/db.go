@@ -23,8 +23,11 @@ func InitDB(DBDir string) {
 		log.Panic(err)
 	}
 
-	consumers := store.Use("Cosumers")
-	if err = consumers.Index([]string{"Keys"}); err != nil {
+	consumers := store.Use("Consumers")
+	if err = consumers.Index([]string{"CustomId"}); err != nil {
+		log.Panic(err)
+	}
+	if err = consumers.Index([]string{"Username"}); err != nil {
 		log.Panic(err)
 	}
 }
@@ -42,6 +45,41 @@ func CloseDB() {
 	if err := store.Close(); err != nil {
 		log.Panic(err)
 	}
+}
+
+func FindByID(col string, id int) map[string]interface{} {
+	collection := store.Use(col)
+	readBack, err := collection.Read(id)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	return readBack
+}
+
+func FindBy(col string, field []interface{}, val string, limit int) map[int]map[string]interface{} {
+	collection := store.Use(col)
+	query := map[string]interface{}{
+	   "eq":    val,
+	   "in":    field,
+	   "limit": limit,
+	}
+
+	queryResult := make(map[int]struct{})
+	if err := db.EvalQuery(query, collection, &queryResult); nil != err {
+		log.Panic(err)
+	}
+
+	results := make(map[int]map[string]interface{})
+	for id := range queryResult {
+		readBack, err := collection.Read(id)
+		if nil != err {
+			log.Panic(err)
+		}
+		results[id] = readBack
+	}
+
+	return results
 }
 
 func newUuid() string {
