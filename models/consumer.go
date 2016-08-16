@@ -8,14 +8,26 @@ type Consumer struct {
 	id       int
     CustomId string
 	Username string
+	ApiKey   string
 }
 
 // Create new consumer
-func NewConsumer(customId, username string) *Consumer {
+func NewConsumer(username, customId, apiKey string) *Consumer {
+	if apiKey == "" {
+		var keyExists *Consumer
+		for {
+			apiKey = newUuid()
+			keyExists = FindConsumerByApiKey(apiKey)
+			if keyExists == nil {
+				break
+			}
+		}
+	}
 	return &Consumer{
 		id:       0,
 		CustomId: customId,
 		Username: username,
+		ApiKey:   apiKey,
 	}
 }
 
@@ -25,13 +37,27 @@ func GetConsumerFromInterface(id int, c map[string]interface{}) *Consumer {
 		id:       id,
 		CustomId: c["CustomId"].(string),
 		Username: c["Username"].(string),
+		ApiKey:   c["ApiKey"].(string),
 	}
 }
 
-// Find consumer by api key
 func FindConsumerByID(id int) *Consumer {
 	c := FindByID("Consumers", id)
 	return GetConsumerFromInterface(id, c)
+}
+
+func FindConsumerByApiKey(key string) *Consumer {
+	results := FindBy("Consumers", []interface{}{"ApiKey"}, key, 1)
+	if len(results) == 0 {
+		return nil
+	}
+	var consumer map[string]interface{}
+	var consumerId int
+	for id, c := range results {
+		consumer = c
+		consumerId = id
+	}
+	return GetConsumerFromInterface(consumerId, consumer)
 }
 
 // Save consumer in database

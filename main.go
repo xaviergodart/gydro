@@ -12,12 +12,12 @@ func main() {
 	defer models.CloseDB()
 
 	// Set example consumer
-	consumer := models.NewConsumer("", "xavier")
+	consumer := models.NewConsumer("xavier", "", "")
 
-	docID, err := consumer.Save()
+	_, err := consumer.Save()
 	if err != nil {
 		log.Panic(err)
 	}
 
-	log.Println(models.FindConsumerByID(docID))
+	log.Println(models.FindConsumerByApiKey(consumer.ApiKey))
 }

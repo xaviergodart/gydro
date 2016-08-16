@@ -30,6 +30,9 @@ func InitDB(DBDir string) {
 	if err = consumers.Index([]string{"Username"}); err != nil {
 		log.Panic(err)
 	}
+	if err = consumers.Index([]string{"ApiKey"}); err != nil {
+		log.Panic(err)
+	}
 }
 
 func colExists(name string) (bool) {
@@ -57,7 +60,7 @@ func FindByID(col string, id int) map[string]interface{} {
 	return readBack
 }
 
-func FindBy(col string, field []interface{}, val string, limit int) map[int]map[string]interface{} {
+func FindBy(col string, field []interface{}, val interface{}, limit int) map[int]map[string]interface{} {
 	collection := store.Use(col)
 	query := map[string]interface{}{
 	   "eq":    val,
