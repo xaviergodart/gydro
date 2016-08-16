@@ -13,12 +13,10 @@ type Proxy struct {
 func (p *Proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("X-GydroProxy", "GydroProxy")
 	log.Println(r.URL.Path)
-	for pattern, targetProxy := range p.Proxies {
-		if pattern == r.URL.Path{
-			log.Println("proxy: custom")
-			targetProxy.ServeHTTP(w, r)
-			return
-		}
+	if reverse, err := p.Proxies[r.URL.Path]; err == false {
+		log.Println("proxy: custom")
+		reverse.ServeHTTP(w, r)
+		return
 	}
 
 	log.Println("proxy: default")
