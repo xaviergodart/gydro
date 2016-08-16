@@ -2,8 +2,13 @@ package main
 
 import (
 	"github.com/xaviergodart/gydro/models"
+	"github.com/xaviergodart/gydro/server"
+	"net/http"
+	"net/http/httputil"
 	"log"
 )
+
+var gydroProxy *server.Proxy
 
 func main() {
 	// Open main configuration datastore
@@ -19,5 +24,7 @@ func main() {
 		log.Panic(err)
 	}
 
-	log.Println(models.FindConsumerByApiKey(consumer.ApiKey))
+	gydroProxy = &server.Proxy{Proxies: make(map[string]*httputil.ReverseProxy)}
+	http.Handle("/", gydroProxy)
+	http.ListenAndServe(":8000", nil)
 }

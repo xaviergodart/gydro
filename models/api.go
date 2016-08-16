@@ -1,7 +1,7 @@
 package models
 
-type Route struct {
+type Api struct {
 	id       int
-	Pattern  string
+	Route    string
 	Backends []string
 }
