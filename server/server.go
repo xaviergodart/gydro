@@ -1,9 +1,9 @@
 package server
 
 import (
-	"net/http"
 	"github.com/xaviergodart/gydro/middlewares"
 	"github.com/xaviergodart/gydro/models"
+	"net/http"
 )
 
 type Server struct {
@@ -20,4 +20,3 @@ func (s *Server) ListenAndServe(addr string) {
 	http.Handle("/", s.ReverseProxy)
 	http.ListenAndServe(addr, nil)
 }
-
