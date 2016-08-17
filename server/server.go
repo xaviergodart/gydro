@@ -9,11 +9,11 @@ import (
 	"github.com/xaviergodart/gydro/models"
 )
 
-type Proxy struct {
-	Proxies map[string][]*httputil.ReverseProxy
+type Server struct {
+	EntryPoints map[string][]*httputil.ReverseProxy
 }
 
-func NewProxy() *Proxy {
+func NewServer() *Server {
 	apis := models.FindAllApis()
 	conf := make(map[string][]*httputil.ReverseProxy)
 
@@ -27,18 +27,18 @@ func NewProxy() *Proxy {
 		conf[api.Route] = targets
 	}
 
-	return &Proxy{Proxies: conf}
+	return &Server{EntryPoints: conf}
 }
 
-func (p *Proxy) ListenAndServe(addr string) {
-	http.Handle("/", p)
+func (s *Server) ListenAndServe(addr string) {
+	http.Handle("/", s)
 	http.ListenAndServe(addr, nil)
 }
 
-func (p *Proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("X-GydroProxy", "GydroProxy")
 	log.Println(r.URL.Path)
-	if backends, ok := p.Proxies[r.URL.Path]; ok {
+	if backends, ok := s.EntryPoints[r.URL.Path]; ok {
 		log.Println("proxy: custom")
 		log.Println(ok)
 		//random load balancing between backends
