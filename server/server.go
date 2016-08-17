@@ -9,6 +9,9 @@ import (
 func ListenAndServe(addr string) {
 	apis := models.FindAllApis()
 	reverseProxy := middlewares.NewReverseProxy(apis)
-	http.Handle("/", middlewares.KeyAuth(reverseProxy))
+	http.Handle("/",
+		middlewares.KeyAuth(
+			reverseProxy,
+		))
 	http.ListenAndServe(addr, nil)
 }

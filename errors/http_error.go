@@ -15,11 +15,13 @@ var HttpErrors map[string]*HttpError = map[string]*HttpError {
 }
 
 func NewHttpError(w http.ResponseWriter, err string) {
-	http.Error(w, HttpErrors[err].getJSON(), HttpErrors[err].Code)
-	return
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("X-Content-Type-Options", "nosniff")
+	w.WriteHeader(HttpErrors[err].Code)
+	w.Write(HttpErrors[err].getJSON())
 }
 
-func (e *HttpError) getJSON() string {
+func (e *HttpError) getJSON() []byte {
 	jsonError, _ := json.Marshal(e)
-	return string(jsonError[:])
+	return jsonError
 }
