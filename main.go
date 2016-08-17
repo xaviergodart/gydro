@@ -3,9 +3,6 @@ package main
 import (
 	"github.com/xaviergodart/gydro/models"
 	"github.com/xaviergodart/gydro/server"
-	"net/url"
-	"net/http"
-	"net/http/httputil"
 	"log"
 )
 
@@ -25,11 +22,6 @@ func main() {
 		log.Panic(err)
 	}
 
-	testConf := make(map[string]*httputil.ReverseProxy)
-	target, _ := url.Parse("https://google.fr")
-	testConf["/test"] = httputil.NewSingleHostReverseProxy(target)
-
-	gydroProxy = &server.Proxy{Proxies: testConf}
-	http.Handle("/", gydroProxy)
-	http.ListenAndServe(":8000", nil)
+	gydroProxy = server.NewProxy()
+	gydroProxy.ListenAndServe(":8000")
 }
