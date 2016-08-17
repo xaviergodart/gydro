@@ -24,6 +24,8 @@ func NewReverseProxy(backends []string) *ReverseProxy {
 	return &ReverseProxy{stream: stream}
 }
 
+// TODO : Add rewrite handler like rw, _:= rewrite.New(fwd)
+
 func (rp *ReverseProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("X-GydroProxy", "GydroProxy")
 	log.Println(r.URL.Path)
