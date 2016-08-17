@@ -2,19 +2,30 @@ package server
 
 import (
 	"log"
+	"math/rand"
 	"net/url"
 	"net/http"
 	"net/http/httputil"
+	"github.com/xaviergodart/gydro/models"
 )
 
 type Proxy struct {
-	Proxies map[string]*httputil.ReverseProxy
+	Proxies map[string][]*httputil.ReverseProxy
 }
 
 func NewProxy() *Proxy {
-	conf := make(map[string]*httputil.ReverseProxy)
-	target, _ := url.Parse("https://google.fr/")
-	conf["/test"] = httputil.NewSingleHostReverseProxy(target)
+	apis := models.FindAllApis()
+	conf := make(map[string][]*httputil.ReverseProxy)
+
+	// Loading routing and backend configuration from database
+	for _, api := range apis {
+		var targets []*httputil.ReverseProxy
+		for _, backend := range api.Backends {
+			target, _ := url.Parse(backend)
+			targets = append(targets, httputil.NewSingleHostReverseProxy(target))
+		}
+		conf[api.Route] = targets
+	}
 
 	return &Proxy{Proxies: conf}
 }
@@ -27,10 +38,11 @@ func (p *Proxy) ListenAndServe(addr string) {
 func (p *Proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("X-GydroProxy", "GydroProxy")
 	log.Println(r.URL.Path)
-	if reverse, ok := p.Proxies[r.URL.Path]; ok {
+	if backends, ok := p.Proxies[r.URL.Path]; ok {
 		log.Println("proxy: custom")
 		log.Println(ok)
-		reverse.ServeHTTP(w, r)
+		//random load balancing between backends
+		backends[rand.Intn(len(backends))].ServeHTTP(w, r)
 		return
 	}
 

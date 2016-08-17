@@ -10,18 +10,22 @@ var gydroProxy *server.Proxy
 
 func main() {
 	// Open main configuration datastore
-	log.Print("Initialize database connection...")
+	log.Println("Initialize database connection...")
 	models.InitDB("data")
 	defer models.CloseDB()
 
-	// Set example consumer
+	// Set example consumer and api
 	consumer := models.NewConsumer("xavier", "", "")
+	consumer.Save()
 
-	_, err := consumer.Save()
-	if err != nil {
-		log.Panic(err)
+	backends := []string{"http://192.168.1.43:9200/"}
+	api := models.NewApi("/test", backends)
+	if api != nil {
+		api.Save()
 	}
 
+	log.Println("Initializing Gydro proxy...")
 	gydroProxy = server.NewProxy()
+	log.Println("Listening on localhost:8000")
 	gydroProxy.ListenAndServe(":8000")
 }
