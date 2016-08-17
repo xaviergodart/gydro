@@ -26,7 +26,7 @@ func NewServer() *Server {
 			target, _ := url.Parse(backend)
 			lb.UpsertServer(target)
 		}
-		stream, _ := stream.New(lb, stream.Retry(`IsNetworkError() && Attempts() < 2`))
+		stream, _ := stream.New(lb, stream.Retry(`(IsNetworkError() || ResponseCode() >= 500) && Attempts() < 2`))
 		conf[api.Route] = stream
 	}
 
