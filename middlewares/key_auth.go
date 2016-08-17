@@ -1,8 +1,7 @@
 package middlewares
 
 import (
-	"github.com/xaviergodart/gydro/httpapi"
-	"encoding/json"
+	"github.com/xaviergodart/gydro/errors"
 	"net/http"
 )
 
@@ -11,7 +10,7 @@ func KeyAuth(next http.Handler) http.Handler {
 		keyget := r.URL.Query().Get("apikey")
 		keyheader := r.Header.Get("apikey")
 		if keyget == "" && keyheader == "" {
-			httpapi.NewHttpError(w, "ErrorApiKeyMandatory")
+			errors.NewHttpError(w, "ErrorApiKeyMandatory")
 			return
 		}
 		next.ServeHTTP(w, r)

@@ -1,4 +1,4 @@
-package httpapi
+package errors
 
 import (
 	"encoding/json"
@@ -14,7 +14,7 @@ var HttpErrors map[string]*HttpError = map[string]*HttpError {
 	"ErrorApiKeyMandatory": &HttpError{Code: 403, Message: "apikey is mandatory"},
 }
 
-func NewHttpError(w http.ResponseWriter, err string) http.Error {
+func NewHttpError(w http.ResponseWriter, err string) {
 	http.Error(w, HttpErrors[err].getJSON(), HttpErrors[err].Code)
 	return
 }
