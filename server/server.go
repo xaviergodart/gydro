@@ -6,17 +6,9 @@ import (
 	"net/http"
 )
 
-type Server struct {
-	ReverseProxy *middlewares.ReverseProxy
-}
-
-func NewServer() *Server {
+func ListenAndServe(addr string) {
 	apis := models.FindAllApis()
 	reverseProxy := middlewares.NewReverseProxy(apis)
-	return &Server{ReverseProxy: reverseProxy}
-}
-
-func (s *Server) ListenAndServe(addr string) {
-	http.Handle("/", s.ReverseProxy)
+	http.Handle("/", middlewares.KeyAuth(reverseProxy))
 	http.ListenAndServe(addr, nil)
 }

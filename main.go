@@ -6,8 +6,6 @@ import (
 	"log"
 )
 
-var gydroProxy *server.Server
-
 func main() {
 	// Open main configuration datastore
 	log.Println("Initialize database connection...")
@@ -24,8 +22,6 @@ func main() {
 		api.Save()
 	}
 
-	log.Println("Initializing Gydro proxy...")
-	gydroProxy = server.NewServer()
 	log.Println("Listening on localhost:8000")
-	gydroProxy.ListenAndServe(":8000")
+	server.ListenAndServe(":8000")
 }

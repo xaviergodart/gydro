@@ -11,7 +11,7 @@ import (
 )
 
 type ReverseProxy struct {
-	EntryPoints map[string]*stream.Streamer
+	entryPoints map[string]*stream.Streamer
 }
 
 func NewReverseProxy(apis []*models.Api) *ReverseProxy {
@@ -29,13 +29,13 @@ func NewReverseProxy(apis []*models.Api) *ReverseProxy {
 		conf[api.Route] = stream
 	}
 
-	return &ReverseProxy{EntryPoints: conf}
+	return &ReverseProxy{entryPoints: conf}
 }
 
 func (rp *ReverseProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("X-GydroProxy", "GydroProxy")
 	log.Println(r.URL.Path)
-	if backends, ok := rp.EntryPoints[r.URL.Path]; ok {
+	if backends, ok := rp.entryPoints[r.URL.Path]; ok {
 		log.Println("proxy: custom")
 		log.Println(ok)
 		backends.ServeHTTP(w, r)
