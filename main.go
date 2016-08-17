@@ -18,7 +18,7 @@ func main() {
 	consumer := models.NewConsumer("xavier", "", "")
 	consumer.Save()
 
-	backends := []string{"http://192.168.1.43:9200/"}
+	backends := []string{"http://localhost:8080/", "http://localhost:8081/"}
 	api := models.NewApi("/test", backends)
 	if api != nil {
 		api.Save()

@@ -2,29 +2,32 @@ package server
 
 import (
 	"log"
-	"math/rand"
 	"net/url"
 	"net/http"
-	"net/http/httputil"
+	"github.com/vulcand/oxy/forward"
+	"github.com/vulcand/oxy/roundrobin"
+	"github.com/vulcand/oxy/stream"
 	"github.com/xaviergodart/gydro/models"
 )
 
 type Server struct {
-	EntryPoints map[string][]*httputil.ReverseProxy
+	EntryPoints map[string]*stream.Streamer
 }
 
 func NewServer() *Server {
 	apis := models.FindAllApis()
-	conf := make(map[string][]*httputil.ReverseProxy)
+	conf := make(map[string]*stream.Streamer)
 
 	// Loading routing and backend configuration from database
 	for _, api := range apis {
-		var targets []*httputil.ReverseProxy
+		fwd, _ := forward.New()
+		lb, _ := roundrobin.New(fwd)
 		for _, backend := range api.Backends {
 			target, _ := url.Parse(backend)
-			targets = append(targets, httputil.NewSingleHostReverseProxy(target))
+			lb.UpsertServer(target)
 		}
-		conf[api.Route] = targets
+		stream, _ := stream.New(lb, stream.Retry(`IsNetworkError() && Attempts() < 2`))
+		conf[api.Route] = stream
 	}
 
 	return &Server{EntryPoints: conf}
@@ -41,8 +44,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if backends, ok := s.EntryPoints[r.URL.Path]; ok {
 		log.Println("proxy: custom")
 		log.Println(ok)
-		//random load balancing between backends
-		backends[rand.Intn(len(backends))].ServeHTTP(w, r)
+		backends.ServeHTTP(w, r)
 		return
 	}
 
