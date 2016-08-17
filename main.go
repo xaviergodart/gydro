@@ -14,6 +14,7 @@ func main() {
 
 	// Set example consumer and api
 	consumer := models.NewConsumer("xavier", "", "")
+	log.Println(consumer)
 	consumer.Save()
 
 	backends := []string{"http://localhost:8081/", "http://localhost:8083/"}

@@ -12,6 +12,7 @@ type HttpError struct {
 
 var HttpErrors map[string]*HttpError = map[string]*HttpError {
 	"ErrorApiKeyMandatory": &HttpError{Code: 403, Message: "apikey is mandatory"},
+	"ErrorApiKeyInvalid":   &HttpError{Code: 403, Message: "given apikey is invalid"},
 }
 
 func NewHttpError(w http.ResponseWriter, err string) {
