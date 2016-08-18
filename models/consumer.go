@@ -60,6 +60,10 @@ func FindConsumerByApiKey(key string) *Consumer {
 	return GetConsumerFromInterface(consumerId, consumer)
 }
 
+func (c *Consumer) GetId() int {
+	return c.id
+}
+
 // Save consumer in database
 // Insert a new document if the id == 0
 func (c *Consumer) Save() (int, error) {

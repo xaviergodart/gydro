@@ -17,6 +17,8 @@ func main() {
 
 	http.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
 		println("--->", os.Args[1], req.URL.String())
+		println("--->", os.Args[1], req.Header.Get("X-GYDRO-ConsumerId"))
+		println("--->", os.Args[1], req.Header.Get("X-GYDRO-ConsumerCustomId"))
 		//http.Error(w, "Erreur !", http.StatusInternalServerError)
 	})
 	http.ListenAndServe(":"+os.Args[1], nil)
