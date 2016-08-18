@@ -4,7 +4,6 @@ import (
 	"github.com/vulcand/oxy/forward"
 	"github.com/vulcand/oxy/roundrobin"
 	"github.com/vulcand/oxy/stream"
-	"log"
 	"net/http"
 	"net/url"
 )
@@ -25,6 +24,5 @@ func NewReverseProxy(backends []string) *ReverseProxy {
 }
 
 func (rp *ReverseProxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	log.Println(r.URL.Path)
 	rp.stream.ServeHTTP(w, r)
 }

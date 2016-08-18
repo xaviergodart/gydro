@@ -10,8 +10,10 @@ func ListenAndServe(addr string) {
 	apis := models.FindAllApis()
 	router := NewRouter(apis)
 	http.Handle("/",
+		middlewares.Logger(
 		middlewares.KeyAuth(
 			router,
-		))
+		)),
+	)
 	http.ListenAndServe(addr, nil)
 }

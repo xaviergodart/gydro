@@ -18,8 +18,9 @@ func main() {
 
 	http.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
 		println("--->", os.Args[1], req.URL.String())
-		println("--->", os.Args[1], "X-GYDRO-ConsumerId:", req.Header.Get("X-GYDRO-ConsumerId"))
-		println("--->", os.Args[1], "X-GYDRO-ConsumerCustomId:", req.Header.Get("X-GYDRO-ConsumerCustomId"))
+		println("--->", os.Args[1], "X-Consumer-ID:", req.Header.Get("X-Consumer-ID"))
+		println("--->", os.Args[1], "X-Consumer-Custom-ID:", req.Header.Get("X-GYDRO-ConsumerCustom-ID"))
+		println("--->", os.Args[1], "X-Consumer-Username:", req.Header.Get("X-GYDRO-Username"))
 		println("--->", os.Args[1], "X-Forwarded-For:", req.Header.Get("X-Forwarded-For"))
 
 		w.Header().Set("Content-Type", "application/json")
