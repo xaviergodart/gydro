@@ -1,22 +1,21 @@
 package server
 
 import (
-	"github.com/bmizerany/pat"
+	router "github.com/gorilla/mux"
 	"github.com/xaviergodart/gydro/models"
 	"net/http"
 )
 
 type Router struct {
-	mux *pat.PatternServeMux
+	mux *router.Router
 }
 
 func NewRouter(apis []*models.Api) *Router {
 	// Loading routing and backend configuration
-	mux := pat.New()
+	mux := router.NewRouter()
 	for _, api := range apis {
-		mux.Get(api.Route, NewReverseProxy(api.Backends))
+		mux.PathPrefix(api.Route).Handler(NewReverseProxy(api.Backends))
 	}
-
 	return &Router{mux: mux}
 }
 
