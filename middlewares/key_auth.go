@@ -35,7 +35,7 @@ func KeyAuth(next http.Handler) http.Handler {
 		}
 		r.Header.Set("X-Consumer-ID", strconv.Itoa(consumer.GetId()))
 		r.Header.Set("X-Consumer-Custom-ID", consumer.CustomId)
-		r.Header.Set("X-Consumer-Username", consumer.CustomId)
+		r.Header.Set("X-Consumer-Username", consumer.Username)
 		next.ServeHTTP(w, r)
 	})
 }
