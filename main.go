@@ -30,7 +30,9 @@ func main() {
 	}
 
 	log.Println("Proxy listening on localhost:8000")
-	go server.ListenAndServe(":8000")
+	go server.RunGateway(":8000")
 	log.Println("Api listening on localhost:8001")
 	go httpapi.RunApiServer()
+
+	select {}
 }

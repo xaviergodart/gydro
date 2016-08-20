@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func ListenAndServe(addr string) {
+func RunGateway(addr string) {
 	apis := models.FindAllApis()
 	router := NewRouter(apis)
 	http.Handle("/",
