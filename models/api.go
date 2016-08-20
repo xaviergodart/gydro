@@ -24,7 +24,7 @@ func GetApiFromInterface(id int, a map[string]interface{}) *Api {
 }
 
 func NewApi(route string, backends []string) *Api {
-	apiExists := FindApiByRoute(route)
+	apiExists := FindApiBy("Route", route)
 	if apiExists != nil {
 		return nil
 	}
@@ -50,8 +50,8 @@ func FindAllApis() []*Api {
 	return apisList
 }
 
-func FindApiByRoute(route string) *Api {
-	results := FindBy("Apis", []interface{}{"Route"}, route, 1)
+func FindApiBy(field string, value string) *Api {
+	results := FindBy("Apis", []interface{}{field}, value, 1)
 	if len(results) == 0 {
 		return nil
 	}
