@@ -11,9 +11,9 @@ func RunGateway(addr string) {
 	router := NewRouter(apis)
 	http.Handle("/",
 		middlewares.Logger(
-		middlewares.KeyAuth(
-			router,
-		)),
+			middlewares.KeyAuth(
+				router,
+			)),
 	)
 	http.ListenAndServe(addr, nil)
 }

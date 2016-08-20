@@ -1,10 +1,10 @@
 package httpapi
 
 import (
-    "net/http"
-    "strconv"
-    "github.com/labstack/echo"
-    "github.com/xaviergodart/gydro/models"
+	"github.com/labstack/echo"
+	"github.com/xaviergodart/gydro/models"
+	"net/http"
+	"strconv"
 )
 
 func ApiController(e *echo.Echo) {
@@ -25,4 +25,3 @@ func getAllApis(c echo.Context) error {
 	apis := models.FindAllApis()
 	return c.JSON(http.StatusOK, apis)
 }
-

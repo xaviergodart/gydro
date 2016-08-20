@@ -2,8 +2,8 @@ package middlewares
 
 import (
 	"github.com/gorilla/handlers"
-	"os"
 	"net/http"
+	"os"
 )
 
 func Logger(next http.Handler) http.Handler {

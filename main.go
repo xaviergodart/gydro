@@ -1,9 +1,9 @@
 package main
 
 import (
+	"github.com/xaviergodart/gydro/httpapi"
 	"github.com/xaviergodart/gydro/models"
 	"github.com/xaviergodart/gydro/server"
-	"github.com/xaviergodart/gydro/httpapi"
 	"log"
 )
 

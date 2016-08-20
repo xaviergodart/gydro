@@ -10,9 +10,9 @@ type HttpError struct {
 	Message string `json:"message"`
 }
 
-var HttpErrors map[string]*HttpError = map[string]*HttpError {
+var HttpErrors map[string]*HttpError = map[string]*HttpError{
 	"ErrorApiKeyMandatory": &HttpError{Code: http.StatusUnauthorized, Message: "apikey is mandatory"},
-	"ErrorApiKeyInvalid":   &HttpError{Code: http.StatusUnauthorized,Message: "given apikey is invalid"},
+	"ErrorApiKeyInvalid":   &HttpError{Code: http.StatusUnauthorized, Message: "given apikey is invalid"},
 }
 
 func NewHttpError(w http.ResponseWriter, err string) {

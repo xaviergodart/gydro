@@ -1,9 +1,9 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
-	"encoding/json"
 	"os"
 	"strconv"
 )

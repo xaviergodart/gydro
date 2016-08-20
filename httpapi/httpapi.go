@@ -1,9 +1,9 @@
 package httpapi
 
 import (
+	"github.com/labstack/echo"
+	"github.com/labstack/echo/engine/standard"
 	"net/http"
-    "github.com/labstack/echo"
-    "github.com/labstack/echo/engine/standard"
 )
 
 var (
@@ -11,12 +11,12 @@ var (
 )
 
 func RunApiServer(addr string) {
-    e := echo.New()
-    e.GET("/", func(c echo.Context) error {
-        return c.JSON(http.StatusOK, map[string]string{"name": "Gydro Api Gateway", "version": "0.1.0"})
-    })
+	e := echo.New()
+	e.GET("/", func(c echo.Context) error {
+		return c.JSON(http.StatusOK, map[string]string{"name": "Gydro Api Gateway", "version": "0.1.0"})
+	})
 
-    ApiController(e)
+	ApiController(e)
 
-    e.Run(standard.New(addr))
+	e.Run(standard.New(addr))
 }
