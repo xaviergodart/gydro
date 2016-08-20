@@ -8,8 +8,8 @@ import (
 )
 
 func ApiController(e *echo.Echo) {
-	e.GET("/apis", getAllApis)
-	e.GET("/apis/:id", getApi)
+	e.GET("/apis/", getAllApis)
+	e.GET("/apis/:id/", getApi)
 }
 
 func getApi(c echo.Context) error {
