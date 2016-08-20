@@ -5,12 +5,15 @@ import (
 	"github.com/xaviergodart/gydro/models"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 func ApiController(e *echo.Echo) {
 	e.GET("/apis/", getAllApis)
 	e.GET("/apis/:id/", getApi)
 	e.GET("/apis/name/:name/", getApiByName)
+
+	e.POST("/apis/", postApi)
 }
 
 func getAllApis(c echo.Context) error {
@@ -34,4 +37,13 @@ func getApiByName(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, NotFoundError)
 	}
 	return c.JSON(http.StatusOK, api)
+}
+
+func postApi(c echo.Context) error {
+	name := c.FormValue("name")
+	route := c.FormValue("route")
+	backends := strings.Split(c.FormValue("backends"), ",")
+	api := models.NewApi(name, route, backends)
+	api.Save()
+	return c.JSON(http.StatusCreated, api)
 }
