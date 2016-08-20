@@ -1,0 +1,21 @@
+package httpapi
+
+import (
+    "net/http"
+    "strconv"
+    "github.com/labstack/echo"
+    "github.com/xaviergodart/gydro/models"
+)
+
+func ApiController(e *echo.Echo) {
+	e.GET("/apis/:id", getApi)
+}
+
+func getApi(c echo.Context) error {
+	id, _ := strconv.Atoi(c.Param("id"))
+	api := models.FindApiByID(id)
+	if api == nil {
+		return c.JSON(http.StatusNotFound, NotFoundError)
+	}
+	return c.JSON(http.StatusOK, api)
+}

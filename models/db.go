@@ -65,7 +65,7 @@ func FindByID(col string, id int) map[string]interface{} {
 	collection := store.Use(col)
 	readBack, err := collection.Read(id)
 	if err != nil {
-		log.Panic(err)
+		return nil
 	}
 
 	return readBack

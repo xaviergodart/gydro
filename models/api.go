@@ -64,6 +64,15 @@ func FindApiByRoute(route string) *Api {
 	return GetApiFromInterface(apiId, api)
 }
 
+func FindApiByID(id int) *Api {
+	api := FindByID("Apis", id)
+	if api == nil {
+		return nil
+	}
+
+	return GetApiFromInterface(id, api)
+}
+
 // Save api in database
 // Insert a new document if the id == 0
 func (a *Api) Save() (int, error) {

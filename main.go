@@ -23,16 +23,19 @@ func main() {
 	if api != nil {
 		api.Save()
 	}
+	log.Println(api)
+
 	backends2 := []string{"http://localhost:8083/", "http://localhost:8084/"}
 	api2 := models.NewApi("/test/data", backends2)
 	if api2 != nil {
 		api2.Save()
 	}
+	log.Println(api2)
 
-	log.Println("Proxy listening on localhost:8000")
+	log.Println("Gateway listening on localhost:8000")
 	go server.RunGateway(":8000")
 	log.Println("Api listening on localhost:8001")
-	go httpapi.RunApiServer()
+	go httpapi.RunApiServer(":8001")
 
 	select {}
 }
