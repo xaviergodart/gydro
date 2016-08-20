@@ -6,6 +6,7 @@ import (
 
 type Api struct {
 	id       int
+	Name     string
 	Route    string
 	Backends []string
 }
@@ -18,19 +19,22 @@ func GetApiFromInterface(id int, a map[string]interface{}) *Api {
 	}
 	return &Api{
 		id:       id,
+		Name:     a["Name"].(string),
 		Route:    a["Route"].(string),
 		Backends: backends,
 	}
 }
 
-func NewApi(route string, backends []string) *Api {
-	apiExists := FindApiBy("Route", route)
-	if apiExists != nil {
+func NewApi(name, route string, backends []string) *Api {
+	routeExists := FindApiBy("Route", route)
+	nameExists := FindApiBy("Name", route)
+	if routeExists != nil || nameExists   != nil {
 		return nil
 	}
 	return &Api{
 		id:       0,
 		Route:    route,
+		Name:     name,
 		Backends: backends,
 	}
 }
