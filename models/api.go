@@ -45,7 +45,7 @@ func NewApi(name, route string, backends []string) (*Api, error) {
 
 func FindAllApis() []*Api {
 	apis := store.Use("Apis")
-	var apisList []*Api
+	var apisList []*Api = make([]*Api, 0)
 	apis.ForEachDoc(func(id int, docContent []byte) (willMoveOn bool) {
 		doc, err := apis.Read(id)
 		if err != nil {
@@ -81,8 +81,7 @@ func FindApiByID(id int) *Api {
 	return GetApiFromInterface(id, api)
 }
 
-// Save api in database
-// Insert a new document if the id == 0
+// Save saves api in database
 func (a *Api) Save() (int, error) {
 	apis := store.Use("Apis")
 	if a.id == 0 {
@@ -93,4 +92,10 @@ func (a *Api) Save() (int, error) {
 		err := apis.Update(a.id, structs.Map(a))
 		return a.id, err
 	}
+}
+
+// Delete removes api from database
+func (a *Api) Delete() error {
+	apis := store.Use("Apis")
+	return apis.Delete(a.id)
 }

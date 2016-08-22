@@ -4,16 +4,15 @@ import (
 	"github.com/labstack/echo"
 	"github.com/xaviergodart/gydro/models"
 	"net/http"
-	"strconv"
 	"strings"
 )
 
 func ApiController(e *echo.Echo) {
 	e.GET("/apis/", getAllApis)
-	e.GET("/apis/:id/", getApi)
-	e.GET("/apis/name/:name/", getApiByName)
-
+	e.GET("/apis/:name/", getApi)
 	e.POST("/apis/", postApi)
+	e.POST("/apis/", postApi)
+	e.DELETE("/apis/:name/", deleteApi)
 }
 
 func getAllApis(c echo.Context) error {
@@ -22,15 +21,6 @@ func getAllApis(c echo.Context) error {
 }
 
 func getApi(c echo.Context) error {
-	id, _ := strconv.Atoi(c.Param("id"))
-	api := models.FindApiByID(id)
-	if api == nil {
-		return NewHttpError(c, 404, "Api not found")
-	}
-	return c.JSON(http.StatusOK, api)
-}
-
-func getApiByName(c echo.Context) error {
 	name := c.Param("name")
 	api := models.FindApiBy("Name", name)
 	if api == nil {
@@ -58,4 +48,19 @@ func postApi(c echo.Context) error {
 
 	ReloadChan<-true
 	return c.JSON(http.StatusCreated, api)
+}
+
+func deleteApi(c echo.Context) error {
+	name := c.Param("name")
+	api := models.FindApiBy("Name", name)
+	if api == nil {
+		return NewHttpError(c, 404, "Api not found")
+	}
+
+	if err := api.Delete(); err != nil {
+		return NewHttpError(c, 500, "Error while deleting api")
+	}
+
+	ReloadChan<-true
+	return c.NoContent(204)
 }
