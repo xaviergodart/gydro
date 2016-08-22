@@ -2,6 +2,7 @@ package models
 
 import (
 	"github.com/fatih/structs"
+	"errors"
 )
 
 type Api struct {
@@ -25,18 +26,21 @@ func GetApiFromInterface(id int, a map[string]interface{}) *Api {
 	}
 }
 
-func NewApi(name, route string, backends []string) *Api {
+func NewApi(name, route string, backends []string) (*Api, error) {
 	routeExists := FindApiBy("Route", route)
-	nameExists := FindApiBy("Name", route)
-	if routeExists != nil || nameExists   != nil {
-		return nil
+	nameExists := FindApiBy("Name", name)
+	if routeExists != nil {
+		return nil, errors.New("Given route already exists")
+	}
+	if nameExists != nil {
+		return nil, errors.New("Given name already exists")
 	}
 	return &Api{
 		id:       0,
 		Route:    route,
 		Name:     name,
 		Backends: backends,
-	}
+	}, nil
 }
 
 func FindAllApis() []*Api {

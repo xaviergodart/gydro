@@ -9,8 +9,12 @@ import (
 
 var (
 	ReloadChan chan bool
-	NotFoundError = echo.NewHTTPError(http.StatusNotFound, "Resource not found")
 )
+
+type HttpError struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+}
 
 func RunApiServer(addr string, reload chan bool) {
 	ReloadChan = reload
@@ -25,4 +29,9 @@ func RunApiServer(addr string, reload chan bool) {
 	ApiController(e)
 
 	e.Run(standard.New(addr))
+}
+
+func NewHttpError(c echo.Context, code int, msg string) (err error) {
+	httperr := &HttpError{Code: code, Message: msg}
+	return c.JSON(code, httperr)
 }

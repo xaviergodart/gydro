@@ -20,23 +20,12 @@ func main() {
 	log.Println(consumer)
 	consumer.Save()
 
-	backends := []string{"http://localhost:8081/", "http://localhost:8082/"}
-	api := models.NewApi("test", "/test", backends)
-	if api != nil {
-		api.Save()
-	}
-	log.Println(api)
-
-	backends2 := []string{"http://localhost:8083/", "http://localhost:8084/"}
-	api2 := models.NewApi("testdata", "/test/data", backends2)
-	if api2 != nil {
-		api2.Save()
-	}
-	log.Println(api2)
-
+	// reload channel is used to reload the gateway configuration
 	reload := make(chan bool)
+	// done channel is used to stop the gateway and exit
 	done := make(chan bool)
 
+	// Listen to SIGINT and SIGTERM to gracefully shutdown the gateway
 	go func() {
 		sigchan := make(chan os.Signal, 1)
 		signal.Notify(sigchan, os.Interrupt, os.Kill)

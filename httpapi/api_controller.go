@@ -25,7 +25,7 @@ func getApi(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
 	api := models.FindApiByID(id)
 	if api == nil {
-		return c.JSON(http.StatusNotFound, NotFoundError)
+		return NewHttpError(c, 404, "Api not found")
 	}
 	return c.JSON(http.StatusOK, api)
 }
@@ -34,7 +34,7 @@ func getApiByName(c echo.Context) error {
 	name := c.Param("name")
 	api := models.FindApiBy("Name", name)
 	if api == nil {
-		return c.JSON(http.StatusNotFound, NotFoundError)
+		return NewHttpError(c, 404, "Api not found")
 	}
 	return c.JSON(http.StatusOK, api)
 }
@@ -43,8 +43,19 @@ func postApi(c echo.Context) error {
 	name := c.FormValue("name")
 	route := c.FormValue("route")
 	backends := strings.Split(c.FormValue("backends"), ",")
-	api := models.NewApi(name, route, backends)
-	api.Save()
+	if name == "" || route == "" || len(backends) == 0 || backends[0] == "" {
+		return NewHttpError(c, 422, "Mandatory parameter is missing")
+	}
+
+	api, err := models.NewApi(name, route, backends)
+	if err != nil {
+		return NewHttpError(c, 409, err.Error())
+	}
+
+	if _, err := api.Save(); err != nil {
+		return NewHttpError(c, 500, "Error while creating new api")
+	}
+
 	ReloadChan<-true
 	return c.JSON(http.StatusCreated, api)
 }
