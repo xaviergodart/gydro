@@ -5,6 +5,8 @@ import (
 	"github.com/xaviergodart/gydro/models"
 	"github.com/xaviergodart/gydro/server"
 	"log"
+	"os"
+	"os/signal"
 )
 
 func main() {
@@ -32,10 +34,21 @@ func main() {
 	}
 	log.Println(api2)
 
-	log.Println("Gateway listening on localhost:8000")
-	go server.RunGateway(":8000")
-	log.Println("Api listening on localhost:8001")
-	go httpapi.RunApiServer(":8001")
+	reload := make(chan bool)
+	done := make(chan bool)
 
-	select {}
+	go func() {
+		sigchan := make(chan os.Signal, 1)
+		signal.Notify(sigchan, os.Interrupt, os.Kill)
+		<-sigchan
+		done<-true
+	}()
+
+	log.Println("Api listening on localhost:8001")
+	go httpapi.RunApiServer(":8001", reload)
+
+	log.Println("Gateway listening on localhost:8000")
+	server.RunGateway(":8000", reload, done)
+
+	os.Exit(0)
 }

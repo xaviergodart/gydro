@@ -45,5 +45,6 @@ func postApi(c echo.Context) error {
 	backends := strings.Split(c.FormValue("backends"), ",")
 	api := models.NewApi(name, route, backends)
 	api.Save()
+	ReloadChan<-true
 	return c.JSON(http.StatusCreated, api)
 }

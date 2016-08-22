@@ -8,12 +8,16 @@ import (
 )
 
 var (
+	ReloadChan chan bool
 	NotFoundError = echo.NewHTTPError(http.StatusNotFound, "Resource not found")
 )
 
-func RunApiServer(addr string) {
+func RunApiServer(addr string, reload chan bool) {
+	ReloadChan = reload
+
 	e := echo.New()
 	e.Pre(middleware.AddTrailingSlash())
+
 	e.GET("/", func(c echo.Context) error {
 		return c.JSON(http.StatusOK, map[string]string{"name": "Gydro Api Gateway", "version": "0.1.0"})
 	})
