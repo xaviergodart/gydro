@@ -13,6 +13,7 @@ func ApiController(e *echo.Echo) {
 	e.POST("/apis/", postApi)
 	e.POST("/apis/", postApi)
 	e.PATCH("/apis/:name/", patchApi)
+	e.PUT("/apis/", putApi)
 	e.DELETE("/apis/:name/", deleteApi)
 }
 
@@ -32,7 +33,7 @@ func getApi(c echo.Context) error {
 	return c.JSON(http.StatusOK, api)
 }
 
-// postApi create a new api from post values
+// postApi create a new api from given values
 func postApi(c echo.Context) error {
 	name := c.FormValue("name")
 	route := c.FormValue("route")
@@ -54,7 +55,7 @@ func postApi(c echo.Context) error {
 	return c.JSON(http.StatusCreated, api)
 }
 
-// patchApi updates an api for a given name with given post values
+// patchApi updates an api for a given name with given values
 func patchApi(c echo.Context) error {
 	name := c.Param("name")
 	api := models.FindApiBy("Name", name)
@@ -69,6 +70,23 @@ func patchApi(c echo.Context) error {
 
 	ReloadChan<-true
 	return c.JSON(200, api)
+}
+
+// putApi creates or updates an api with given values
+func putApi(c echo.Context) error {
+	name := c.FormValue("name")
+	if name == "" {
+		return NewHttpError(c, 422, "Name parameter is missing")
+	}
+
+	api := models.FindApiBy("Name", name)
+	if api == nil {
+		return postApi(c)
+	} else {
+		c.SetParamNames("name")
+		c.SetParamValues(name)
+		return patchApi(c)
+	}
 }
 
 // deleteApi removes an api for a given name
