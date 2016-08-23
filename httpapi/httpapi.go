@@ -27,6 +27,7 @@ func RunApiServer(addr string, reload chan bool) {
 	})
 
 	ApiController(e)
+	ConsumerController(e)
 
 	e.Run(standard.New(addr))
 }

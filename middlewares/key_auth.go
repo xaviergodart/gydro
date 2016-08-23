@@ -21,20 +21,19 @@ func KeyAuth(next http.Handler) http.Handler {
 			errors.NewHttpError(w, "ErrorApiKeyMandatory")
 			return
 		case keyget != "":
-			consumer = models.FindConsumerByApiKey(keyget)
+			consumer = models.FindConsumerBy("ApiKey", keyget)
 			if consumer == nil {
 				errors.NewHttpError(w, "ErrorApiKeyInvalid")
 				return
 			}
 		case keyheader != "":
-			consumer = models.FindConsumerByApiKey(keyheader)
+			consumer = models.FindConsumerBy("ApiKey", keyheader)
 			if consumer == nil {
 				errors.NewHttpError(w, "ErrorApiKeyInvalid")
 				return
 			}
 		}
 		r.Header.Set("X-Consumer-ID", strconv.Itoa(consumer.GetId()))
-		r.Header.Set("X-Consumer-Custom-ID", consumer.CustomId)
 		r.Header.Set("X-Consumer-Username", consumer.Username)
 		next.ServeHTTP(w, r)
 	})

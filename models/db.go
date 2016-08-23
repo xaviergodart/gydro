@@ -8,7 +8,7 @@ import (
 
 var (
 	store       *db.DB
-	collections = map[string][]string{"Consumers": {"CustomId", "Username", "ApiKey"}, "Apis": {"Route", "Name"}} // collection and indexes
+	collections = map[string][]string{"Consumers": {"Username", "ApiKey"}, "Apis": {"Route", "Name"}} // collection and indexes
 )
 
 func InitDB(DBDir string) {

@@ -10,15 +10,10 @@ import (
 )
 
 func main() {
-	// Open main configuration datastore
+	// Open datastore
 	log.Println("Initialize database connection...")
 	models.InitDB("data")
 	defer models.CloseDB()
-
-	// Set example consumer and api
-	consumer := models.NewConsumer("xavier", "", "")
-	log.Println(consumer)
-	consumer.Save()
 
 	// reload channel is used to reload the gateway configuration
 	reload := make(chan bool)

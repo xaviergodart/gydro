@@ -11,7 +11,6 @@ func ApiController(e *echo.Echo) {
 	e.GET("/apis/", getAllApis)
 	e.GET("/apis/:name/", getApi)
 	e.POST("/apis/", postApi)
-	e.POST("/apis/", postApi)
 	e.PATCH("/apis/:name/", patchApi)
 	e.PUT("/apis/", putApi)
 	e.DELETE("/apis/:name/", deleteApi)
