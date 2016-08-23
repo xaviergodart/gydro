@@ -2,30 +2,18 @@ package models
 
 import (
 	"github.com/fatih/structs"
+	"github.com/mitchellh/mapstructure"
 	"errors"
 )
 
 type Api struct {
 	id       int
-	Name     string
-	Route    string
-	Backends []string
+	Name     string   `json:"name"`
+	Route    string   `json:"route"`
+	Backends []string `json:"backends"`
 }
 
-// Convert an map[string]interface{} (from tiedot) to a api struct
-func GetApiFromInterface(id int, a map[string]interface{}) *Api {
-	var backends []string
-	for _, v := range a["Backends"].([]interface{}) {
-		backends = append(backends, v.(string))
-	}
-	return &Api{
-		id:       id,
-		Name:     a["Name"].(string),
-		Route:    a["Route"].(string),
-		Backends: backends,
-	}
-}
-
+// NewApi returns a new Api. It checks if given route or name are already used.
 func NewApi(name, route string, backends []string) (*Api, error) {
 	routeExists := FindApiBy("Route", route)
 	nameExists := FindApiBy("Name", name)
@@ -43,6 +31,32 @@ func NewApi(name, route string, backends []string) (*Api, error) {
 	}, nil
 }
 
+// GetApiFromInterface converts an map[string]interface{} (from tiedot) to a api struct
+func GetApiFromInterface(id int, a map[string]interface{}) *Api {
+	var api Api
+	if err := mapstructure.Decode(a, &api); err != nil {
+		return nil
+	}
+
+	api.id = id
+	return &api
+}
+
+// UpdateFromForm update api from form values
+func (a *Api) UpdateFromForm(form map[string][]string) {
+	for k, v := range form {
+		switch k {
+			case "name":
+				a.Name = v[0]
+			case "route":
+				a.Route = v[0]
+			case "backends":
+				a.Backends = v
+		}
+	}
+}
+
+// FindAllApis returns all apis
 func FindAllApis() []*Api {
 	apis := store.Use("Apis")
 	var apisList []*Api = make([]*Api, 0)
@@ -58,6 +72,7 @@ func FindAllApis() []*Api {
 	return apisList
 }
 
+// FindApiBy returns api matching provided field->value
 func FindApiBy(field string, value string) *Api {
 	results := FindBy("Apis", []interface{}{field}, value, 1)
 	if len(results) == 0 {
@@ -72,6 +87,7 @@ func FindApiBy(field string, value string) *Api {
 	return GetApiFromInterface(apiId, api)
 }
 
+// FindApiByID returns api by ID
 func FindApiByID(id int) *Api {
 	api := FindByID("Apis", id)
 	if api == nil {
