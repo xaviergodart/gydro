@@ -11,6 +11,9 @@ func ConsumerController(e *echo.Echo) {
     e.GET("/consumers/", getAllConsumers)
     e.GET("/consumers/:username/", getConsumer)
     e.POST("/consumers/", postConsumer)
+    e.PATCH("/consumers/:username/", patchConsumer)
+    e.PUT("/consumers/", putConsumer)
+    e.DELETE("/consumers/:username/", deleteConsumer)
 }
 
 // getAllConsumers returns all consumers
@@ -47,4 +50,52 @@ func postConsumer(c echo.Context) error {
     }
 
     return c.JSON(http.StatusCreated, consumer)
+}
+
+// patchConsumer updates a consumer for a given username with given values
+func patchConsumer(c echo.Context) error {
+    username := c.Param("username")
+    consumer := models.FindConsumerBy("Username", username)
+    if consumer == nil {
+        return NewHttpError(c, 404, "Consumer not found")
+    }
+
+    consumer.UpdateFromForm(c.FormParams())
+    if _, err := consumer.Save(); err != nil {
+        return NewHttpError(c, 500, "Error while updating consumer")
+    }
+
+    return c.JSON(200, consumer)
+}
+
+// putConsumer creates or updates a consumer with given values
+func putConsumer(c echo.Context) error {
+    username := c.FormValue("username")
+    if username == "" {
+        return NewHttpError(c, 422, "Username parameter is missing")
+    }
+
+    consumer := models.FindConsumerBy("Username", username)
+    if consumer == nil {
+        return postConsumer(c)
+    } else {
+        c.SetParamNames("username")
+        c.SetParamValues(username)
+        return patchConsumer(c)
+    }
+}
+
+// deleteConsumer removes a consumer for a given username
+func deleteConsumer(c echo.Context) error {
+    username := c.Param("username")
+    consumer := models.FindConsumerBy("Username", username)
+    if consumer == nil {
+        return NewHttpError(c, 404, "Consumer not found")
+    }
+
+    if err := consumer.Delete(); err != nil {
+        return NewHttpError(c, 500, "Error while deleting consumer")
+    }
+
+    return c.NoContent(204)
 }

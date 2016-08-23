@@ -116,3 +116,9 @@ func (c *Consumer) Save() (int, error) {
 		return c.id, err
 	}
 }
+
+// Delete removes consumer from database
+func (c *Consumer) Delete() error {
+	consumers := store.Use("Consumers")
+	return consumers.Delete(c.id)
+}
