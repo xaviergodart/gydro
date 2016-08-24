@@ -7,9 +7,10 @@ import (
 )
 
 type Consumer struct {
-	id       int
-	Username string `json:"username"`
-	ApiKey   string `json:"apikey"`
+	id        int
+	Username  string         `json:"username"`
+	ApiKey    string         `json:"apikey"`
+	RateLimit map[string]int `json:"ratelimit"`
 }
 
 // NewConsumer creates new consumer. It generates an apikey if none is given.
@@ -34,9 +35,10 @@ func NewConsumer(username, apiKey string) (*Consumer, error) {
 		}
 	}
 	return &Consumer{
-		id:       0,
-		Username: username,
-		ApiKey:   apiKey,
+		id:        0,
+		Username:  username,
+		ApiKey:    apiKey,
+		RateLimit: make(map[string]int, 0),
 	}, nil
 }
 
