@@ -50,7 +50,7 @@ func postApi(c echo.Context) error {
 		return NewHttpError(c, 500, "Error while creating new api")
 	}
 
-	ReloadChan<-true
+	ReloadChan <- true
 	return c.JSON(http.StatusCreated, api)
 }
 
@@ -67,7 +67,7 @@ func patchApi(c echo.Context) error {
 		return NewHttpError(c, 500, "Error while updating api")
 	}
 
-	ReloadChan<-true
+	ReloadChan <- true
 	return c.JSON(200, api)
 }
 
@@ -100,6 +100,6 @@ func deleteApi(c echo.Context) error {
 		return NewHttpError(c, 500, "Error while deleting api")
 	}
 
-	ReloadChan<-true
+	ReloadChan <- true
 	return c.NoContent(204)
 }

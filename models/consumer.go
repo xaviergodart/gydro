@@ -1,15 +1,15 @@
 package models
 
 import (
+	"errors"
 	"github.com/fatih/structs"
 	"github.com/mitchellh/mapstructure"
-	"errors"
 )
 
 type Consumer struct {
-	id     int
-	Username   string `json:"username"`
-	ApiKey string `json:"apikey"`
+	id       int
+	Username string `json:"username"`
+	ApiKey   string `json:"apikey"`
 }
 
 // NewConsumer creates new consumer. It generates an apikey if none is given.
@@ -55,10 +55,10 @@ func GetConsumerFromInterface(id int, c map[string]interface{}) *Consumer {
 func (c *Consumer) UpdateFromForm(form map[string][]string) {
 	for k, v := range form {
 		switch k {
-			case "username":
-				c.Username = v[0]
-			case "apikey":
-				c.ApiKey = v[0]
+		case "username":
+			c.Username = v[0]
+		case "apikey":
+			c.ApiKey = v[0]
 		}
 	}
 }

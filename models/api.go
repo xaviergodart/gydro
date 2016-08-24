@@ -1,9 +1,9 @@
 package models
 
 import (
+	"errors"
 	"github.com/fatih/structs"
 	"github.com/mitchellh/mapstructure"
-	"errors"
 )
 
 type Api struct {
@@ -46,12 +46,12 @@ func GetApiFromInterface(id int, a map[string]interface{}) *Api {
 func (a *Api) UpdateFromForm(form map[string][]string) {
 	for k, v := range form {
 		switch k {
-			case "name":
-				a.Name = v[0]
-			case "route":
-				a.Route = v[0]
-			case "backends":
-				a.Backends = v
+		case "name":
+			a.Name = v[0]
+		case "route":
+			a.Route = v[0]
+		case "backends":
+			a.Backends = v
 		}
 	}
 }

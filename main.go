@@ -25,7 +25,7 @@ func main() {
 		sigchan := make(chan os.Signal, 1)
 		signal.Notify(sigchan, os.Interrupt, os.Kill)
 		<-sigchan
-		done<-true
+		done <- true
 	}()
 
 	log.Println("Api listening on localhost:8001")
