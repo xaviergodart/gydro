@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/fatih/structs"
 	"github.com/mitchellh/mapstructure"
+	"strconv"
 )
 
 type Consumer struct {
@@ -38,7 +39,7 @@ func NewConsumer(username, apiKey string) (*Consumer, error) {
 		id:        0,
 		Username:  username,
 		ApiKey:    apiKey,
-		RateLimit: make(map[string]int, 0),
+		RateLimit: map[string]int{"s": 0, "m": 0, "h": 0, "d": 0},
 	}, nil
 }
 
@@ -61,6 +62,14 @@ func (c *Consumer) UpdateFromForm(form map[string][]string) {
 			c.Username = v[0]
 		case "apikey":
 			c.ApiKey = v[0]
+		case "ratelimit[s]":
+			c.RateLimit["s"], _ = strconv.Atoi(v[0])
+		case "ratelimit[m]":
+			c.RateLimit["m"], _ = strconv.Atoi(v[0])
+		case "ratelimit[h]":
+			c.RateLimit["h"], _ = strconv.Atoi(v[0])
+		case "ratelimit[d]":
+			c.RateLimit["d"], _ = strconv.Atoi(v[0])
 		}
 	}
 }

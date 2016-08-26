@@ -45,6 +45,7 @@ func postConsumer(c echo.Context) error {
 		return NewHttpError(c, 409, err.Error())
 	}
 
+	consumer.UpdateFromForm(c.FormParams())
 	if _, err := consumer.Save(); err != nil {
 		return NewHttpError(c, 500, "Error while creating new consumer")
 	}
