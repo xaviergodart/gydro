@@ -41,6 +41,6 @@ To start Gydro:
 $GOPATH/bin/gydro
 ```
 
-### From binaries
+## Documentation
 
-TODO
+[Getting started](https://github.com/xaviergodart/gydro/wiki/Getting-started)
