@@ -33,8 +33,12 @@ A lightweight API Gateway with zero dependencies for JSON services written in Go
 
 Install Go >= 1.7, set your $GOPATH, and run :
 ```
-$ go get github.com/xaviergodart/gydro
-$ $GOPATH/bin/gydro
+go get github.com/xaviergodart/gydro
+```
+
+To start Gydro:
+```
+$GOPATH/bin/gydro
 ```
 
 ### From binaries
