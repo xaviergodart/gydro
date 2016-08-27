@@ -21,15 +21,15 @@ func CloseDB() {
 	store.Close()
 }
 
-func IsExceeded(id string, limits map[string]int) bool {
-	current_values := getCurrentValues(id)
+func IsExceeded(id int, limits map[string]int) bool {
+	current_values := getCurrentValues(strconv.Itoa(id))
 	for k, v := range current_values {
-		if v >= limits[k] {
+		if limits[k] != 0 && v >= limits[k] {
 			return true
 		}
 	}
 
-	incr(id, current_values)
+	incr(strconv.Itoa(id), current_values)
 	return false
 }
 
