@@ -19,8 +19,8 @@ A lightweight API Gateway with zero dependencies for JSON services. You can see 
 
 ## Under the hood
 
-- (https://github.com/HouzuoGuo/tiedot)[Tiedot] as datastore
-- (https://github.com/tidwall/buntdb)[BuntDB] for rate limiter middleware backend
-- (https://github.com/gorilla/mux)[Gorilla Mux] for api routing
-- (https://github.com/vulcand/oxy/)[Oxy] for forwarding and load balancing requests
-- (https://github.com/labstack/echo)[Echo] for admin api
+- [Tiedot](https://github.com/HouzuoGuo/tiedot) as datastore
+- [BuntDB](https://github.com/tidwall/buntdb) for rate limiter middleware backend
+- [Gorilla Mux](https://github.com/gorilla/mux) for api routing
+- [Oxy](https://github.com/vulcand/oxy/) for forwarding and load balancing requests
+- [Echo](https://github.com/labstack/echo) for admin api
