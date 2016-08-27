@@ -13,9 +13,9 @@ func RunGateway(addr string, reload chan bool, done chan bool) {
 		router := NewRouter(apis)
 		handler := middlewares.Logger(
 			middlewares.KeyAuth(
-			middlewares.RateLimiter(
-				router,
-			)))
+				middlewares.RateLimiter(
+					router,
+				)))
 
 		go manners.ListenAndServe(addr, handler)
 

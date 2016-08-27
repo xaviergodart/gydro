@@ -1,11 +1,11 @@
 package middlewares
 
 import (
+	"context"
 	"github.com/xaviergodart/gydro/errors"
 	"github.com/xaviergodart/gydro/models"
 	"net/http"
 	"strconv"
-	"context"
 )
 
 var (
