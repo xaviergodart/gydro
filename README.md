@@ -17,6 +17,7 @@ A lightweight API Gateway with zero dependencies for JSON services written in Go
 - Add groups authorization
 - Add circuit breaker middleware
 - Add JWT auth
+- Add support for an external database to allow multi host deployments
 - Add some tests...
 
 ## Under the hood
