@@ -5,6 +5,7 @@ import (
 	"github.com/xaviergodart/gydro/models"
 	"net/http"
 	"strconv"
+	"context"
 )
 
 var (
@@ -35,6 +36,8 @@ func KeyAuth(next http.Handler) http.Handler {
 		}
 		r.Header.Set("X-Consumer-ID", strconv.Itoa(consumer.GetId()))
 		r.Header.Set("X-Consumer-Username", consumer.Username)
-		next.ServeHTTP(w, r)
+
+		ctx := context.WithValue(r.Context(), "consumer", consumer)
+		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/xaviergodart/gydro/httpapi"
 	"github.com/xaviergodart/gydro/models"
+	"github.com/xaviergodart/gydro/ratelimiter"
 	"github.com/xaviergodart/gydro/server"
 	"log"
 	"os"
@@ -11,9 +12,14 @@ import (
 
 func main() {
 	// Open datastore
-	log.Println("Initialize database connection...")
+	log.Println("Initialize database...")
 	models.InitDB("data")
 	defer models.CloseDB()
+
+	// Open ratelimiter datastore
+	log.Println("Initialize ratelimiter...")
+	ratelimiter.InitDB("ratelimiter.db")
+	defer ratelimiter.CloseDB()
 
 	// reload channel is used to reload the gateway configuration
 	reload := make(chan bool)
