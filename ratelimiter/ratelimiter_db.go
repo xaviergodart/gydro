@@ -7,7 +7,10 @@ import (
 	"time"
 )
 
-var store *buntdb.DB
+var (
+	store *buntdb.DB
+	limiterConfiguration = map[string]map[string]interface{}{"s": {"format": "2006-01-02-15-04-05", "expires": time.Second}, "m": {"format": "2006-01-02-15-04", "expires": time.Minute}, "h": {"format": "2006-01-02-15", "expires": time.Hour}, "d": {"format": "2006-01-02", "expires": 24 * time.Hour}}
+)
 
 func InitDB(DBDir string) {
 	var err error
@@ -35,26 +38,20 @@ func IsExceeded(id int, limits map[string]int) bool {
 
 func incr(id string, current_values map[string]int) {
 	store.Update(func(tx *buntdb.Tx) error {
-		tx.Set(id+":"+time.Now().Format("2006-01-02-15-04-05"), strconv.Itoa(current_values["s"]+1), &buntdb.SetOptions{Expires: true, TTL: time.Second})
-		tx.Set(id+":"+time.Now().Format("2006-01-02-15-04"), strconv.Itoa(current_values["m"]+1), &buntdb.SetOptions{Expires: true, TTL: time.Minute})
-		tx.Set(id+":"+time.Now().Format("2006-01-02-15"), strconv.Itoa(current_values["h"]+1), &buntdb.SetOptions{Expires: true, TTL: time.Hour})
-		tx.Set(id+":"+time.Now().Format("2006-01-02"), strconv.Itoa(current_values["d"]+1), &buntdb.SetOptions{Expires: true, TTL: 24 * time.Hour})
+		for k, v := range limiterConfiguration {
+			tx.Set(id+":"+time.Now().Format(v["format"].(string)), strconv.Itoa(current_values[k]+1), &buntdb.SetOptions{Expires: true, TTL: v["expires"].(time.Duration)})
+		}
 		return nil
 	})
 }
 
 func getCurrentValues(id string) map[string]int {
-	var values map[string]int
+	values := map[string]int{"s": 0, "m": 0, "h": 0, "d": 0}
 	store.View(func(tx *buntdb.Tx) error {
-		s, _ := tx.Get(id + ":" + time.Now().Format("2006-01-02-15-04-05"))
-		m, _ := tx.Get(id + ":" + time.Now().Format("2006-01-02-15-04"))
-		h, _ := tx.Get(id + ":" + time.Now().Format("2006-01-02-15"))
-		d, _ := tx.Get(id + ":" + time.Now().Format("2006-01-02"))
-		second, _ := strconv.Atoi(s)
-		minute, _ := strconv.Atoi(m)
-		hour, _ := strconv.Atoi(h)
-		day, _ := strconv.Atoi(d)
-		values = map[string]int{"s": second, "m": minute, "h": hour, "d": day}
+		for k, v := range limiterConfiguration {
+			counterStr, _ := tx.Get(id + ":" + time.Now().Format(v["format"].(string)))
+			values[k], _ = strconv.Atoi(counterStr)
+		}
 		return nil
 	})
 
