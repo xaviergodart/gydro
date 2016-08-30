@@ -12,6 +12,7 @@ type Consumer struct {
 	Username  string         `json:"username"`
 	ApiKey    string         `json:"apikey"`
 	RateLimit map[string]int `json:"ratelimit"`
+	Groups   []string        `json:"groups"`
 }
 
 // NewConsumer creates new consumer. It generates an apikey if none is given.
@@ -40,6 +41,7 @@ func NewConsumer(username, apiKey string) (*Consumer, error) {
 		Username:  username,
 		ApiKey:    apiKey,
 		RateLimit: map[string]int{"s": 0, "m": 0, "h": 0, "d": 0},
+		Groups:    make([]string, 0),
 	}, nil
 }
 
@@ -70,6 +72,8 @@ func (c *Consumer) UpdateFromForm(form map[string][]string) {
 			c.RateLimit["h"], _ = strconv.Atoi(v[0])
 		case "ratelimit[d]":
 			c.RateLimit["d"], _ = strconv.Atoi(v[0])
+		case "groups":
+			c.Groups = v
 		}
 	}
 }

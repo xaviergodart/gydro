@@ -29,6 +29,7 @@ func NewApi(name, route string, backends []string) (*Api, error) {
 		Route:    route,
 		Name:     name,
 		Backends: backends,
+		Groups:   make([]string, 0),
 	}, nil
 }
 
