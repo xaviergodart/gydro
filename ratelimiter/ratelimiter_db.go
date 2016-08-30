@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	store *buntdb.DB
+	store                *buntdb.DB
 	limiterConfiguration = map[string]map[string]interface{}{"s": {"format": "2006-01-02-15-04-05", "expires": time.Second}, "m": {"format": "2006-01-02-15-04", "expires": time.Minute}, "h": {"format": "2006-01-02-15", "expires": time.Hour}, "d": {"format": "2006-01-02", "expires": 24 * time.Hour}}
 )
 

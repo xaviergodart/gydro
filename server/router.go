@@ -2,8 +2,8 @@ package server
 
 import (
 	router "github.com/gorilla/mux"
-	"github.com/xaviergodart/gydro/models"
 	"github.com/xaviergodart/gydro/middlewares"
+	"github.com/xaviergodart/gydro/models"
 	"net/http"
 )
 
