@@ -46,6 +46,7 @@ func postApi(c echo.Context) error {
 		return NewHttpError(c, 409, err.Error())
 	}
 
+	api.UpdateFromForm(c.FormParams())
 	if _, err := api.Save(); err != nil {
 		return NewHttpError(c, 500, "Error while creating new api")
 	}

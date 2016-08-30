@@ -11,6 +11,7 @@ type Api struct {
 	Name     string   `json:"name"`
 	Route    string   `json:"route"`
 	Backends []string `json:"backends"`
+	Group    string   `json:"group"`
 }
 
 // NewApi returns a new Api. It checks if given route or name are already used.
@@ -52,6 +53,8 @@ func (a *Api) UpdateFromForm(form map[string][]string) {
 			a.Route = v[0]
 		case "backends":
 			a.Backends = v
+		case "group":
+			a.Group = v[0]
 		}
 	}
 }
