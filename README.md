@@ -11,10 +11,10 @@ A lightweight API Gateway with zero dependencies for JSON services written in Go
 - Consumer auth by api key
 - Round-robin load balancing per route between multiple backends
 - Persistent rate limiter
+- Group based authorization
 
 ## TODO
 
-- Add groups authorization
 - Add circuit breaker middleware
 - Add JWT auth
 - Add support for an external database to allow multi host deployments
