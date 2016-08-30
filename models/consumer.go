@@ -12,7 +12,7 @@ type Consumer struct {
 	Username  string         `json:"username"`
 	ApiKey    string         `json:"apikey"`
 	RateLimit map[string]int `json:"ratelimit"`
-	Groups   []string        `json:"groups"`
+	Groups    []string       `json:"groups"`
 }
 
 // NewConsumer creates new consumer. It generates an apikey if none is given.

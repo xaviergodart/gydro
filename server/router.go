@@ -3,6 +3,7 @@ package server
 import (
 	router "github.com/gorilla/mux"
 	"github.com/xaviergodart/gydro/models"
+	"github.com/xaviergodart/gydro/middlewares"
 	"net/http"
 )
 
@@ -14,7 +15,12 @@ func NewRouter(apis []*models.Api) *Router {
 	// Loading routing and backend configuration
 	mux := router.NewRouter()
 	for _, api := range apis {
-		mux.PathPrefix(api.Route).Handler(NewReverseProxy(api.Backends))
+		mux.PathPrefix(api.Route).Handler(
+			middlewares.GroupAuthorization(
+				api.Groups,
+				NewReverseProxy(api.Backends),
+			),
+		)
 	}
 	return &Router{mux: mux}
 }
