@@ -11,10 +11,10 @@ type HttpError struct {
 }
 
 var HttpErrors map[string]*HttpError = map[string]*HttpError{
-	"ErrorApiKeyMandatory":   &HttpError{Code: http.StatusUnauthorized, Message: "apikey is mandatory"},
-	"ErrorApiKeyInvalid":     &HttpError{Code: http.StatusUnauthorized, Message: "given apikey is invalid"},
-	"ErrorQuotaLimitReached": &HttpError{Code: http.StatusForbidden, Message: "quota limit reached"},
-	"ErrorNoRequiredGroup":   &HttpError{Code: http.StatusForbidden, Message: "consumer is not in required group"},
+	"ErrorApiKeyMandatory":   {Code: http.StatusUnauthorized, Message: "apikey is mandatory"},
+	"ErrorApiKeyInvalid":     {Code: http.StatusUnauthorized, Message: "given apikey is invalid"},
+	"ErrorQuotaLimitReached": {Code: http.StatusForbidden, Message: "quota limit reached"},
+	"ErrorNoRequiredGroup":   {Code: http.StatusForbidden, Message: "consumer is not in required group"},
 }
 
 func NewHttpError(w http.ResponseWriter, err string) {
