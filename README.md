@@ -10,14 +10,15 @@ A lightweight API Gateway with zero dependencies for JSON services written in Go
 - Administration via RESTFul api
 - Consumer auth by api key
 - Round-robin load balancing per route between multiple backends
+- Circuit breaker
 - Persistent rate limiter
 - Group based authorization
 
 ## TODO
 
-- Add circuit breaker middleware
 - Add JWT auth
 - Add support for an external database to allow multi host deployments
+- Allow some configuration in order to override hardcoded default parameters...
 - Add some tests...
 
 ## Under the hood
