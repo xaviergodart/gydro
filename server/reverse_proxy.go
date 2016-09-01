@@ -4,6 +4,7 @@ import (
 	"github.com/vulcand/oxy/forward"
 	"github.com/vulcand/oxy/roundrobin"
 	"github.com/vulcand/oxy/stream"
+	"github.com/vulcand/oxy/cbreaker"
 	"net/http"
 	"net/url"
 )
@@ -14,7 +15,8 @@ type ReverseProxy struct {
 
 func NewReverseProxy(backends []string) *ReverseProxy {
 	fwd, _ := forward.New()
-	lb, _ := roundrobin.New(fwd)
+	cb, _ := cbreaker.New(fwd, `NetworkErrorRatio() > 0.5`)
+	lb, _ := roundrobin.New(cb)
 	for _, backend := range backends {
 		target, _ := url.Parse(backend)
 		lb.UpsertServer(target)
